@@ -1,10 +1,9 @@
 """Бот курсов валют"""
-import datetime
 import logging
-import requests
 import settings
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-
+from current_parce import print_date, current_rate_nacbank, current_rate_belbank, current_rate_belapb, \
+                          current_rate_belbank_multiplay_usd, current_rate_belbank_multiplay_eur
 
 logging.basicConfig(filename='bot.log', level=logging.INFO)
 
@@ -15,44 +14,44 @@ def start_bot(update, context):
 
 
 def calc_rate(update, context):
-    text = update.message.text
-    print(text)
-    update.message.reply_text(current_rate())
+    update.message.reply_text(current_rate_nacbank())
+    update.message.reply_text(current_rate_belbank())
+
+
+def rate(update, context):
+    current_list_usd = ('usd', 'USD', 'доллар', 'долларов', 'баксов')
+    current_list_eur = ('eur', 'EUR', 'евро', 'евриков')
+    if len(context.args) == 2:
+        try:
+            user_number = float(context.args[0])
+        except (TypeError, ValueError):
+            message = 'Введите число.'
+        else:
+            if context.args[1] in current_list_usd:
+                value = current_rate_belbank_multiplay_usd(user_number)
+                message = f"{value} USD"
+            elif context.args[1] in current_list_eur:
+                value = current_rate_belbank_multiplay_eur(user_number)
+                message = f"{value} EUR"
+            else:
+                message = 'Неправильно выбрана валюта.'
+    else:
+        message = 'Введите цифру и валюту. Например 100 usd или 100 eur.'
+    update.message.reply_text(message)
+
+
 
 def main():
     mybot = Updater(settings.API_KEY, use_context=True)
 
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler('start', start_bot))
+    dp.add_handler(CommandHandler('rate', rate))
     dp.add_handler(MessageHandler(Filters.text, calc_rate))
 
     logging.info('БОТ СТАРТОВАЛ!')
     mybot.start_polling()
     mybot.idle()
-
-
-def current_rate():
-    # Сегодняшнее число
-    print(datetime.date.today())
-    # Курс доллара и евро по НБ РБ
-    url_nbrb = 'https://www.nbrb.by/api/exrates/rates?periodicity=0'
-    r = requests.get(url_nbrb)
-    print('***НБ РБ***')
-    print(r.json()[4]['Cur_Abbreviation'], '-->', r.json()[4]['Cur_OfficialRate'])
-    print(r.json()[5]['Cur_Abbreviation'], '-->', r.json()[5]['Cur_OfficialRate'])
-
-    # Курс валют по Беларусбанк
-    url_belarusbank = 'https://belarusbank.by/api/kursExchange?city=Слоним'
-    r_belb = requests.get(url_belarusbank)
-    print('***Беларусбанк***')
-    print('USD', r_belb.json()[0]['USD_in'], r_belb.json()[0]['USD_out'])
-    print('EUR', r_belb.json()[0]['EUR_in'], r_belb.json()[0]['EUR_out'])
-
-    # # Курс валют в Белагропромбанке
-    # url_belagroprom = f'https://belapb.by/CashExRatesDaily.php?ondate={datetime.date.today().day}/{datetime.date.today().month}/{datetime.date.today().year}'
-    # print('https://belapb.by/CashExRatesDaily.php?ondate=7/5/2020')
-    # r_belagroprom = requests.get(url_belagroprom)
-    # print(r_belagroprom.status_code)
 
 
 if __name__ == "__main__":
