@@ -1,16 +1,33 @@
 """Бот курсов валют"""
 import datetime
+import logging
 import requests
 
-from telegram.ext import Updater
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 
 API_KEY = '1618613141:AAHWGYgMfWBDTyPjpTZ4IiTdXl7kzDXvMzA'
+logging.basicConfig(filename='bot.log', level=logging.INFO)
 
+
+def start_bot(update, context):
+    update.message.reply_text("""Бот курса валют.
+Напишите цифру и валюту в формате EUR или USA в которую хотите сконвертировать рубли. Например 100 USA.""")
+
+
+def calc_rate(update, context):
+    text = update.message.text
+    print(text)
+    update.message.reply_text(text)
 
 def main():
     mybot = Updater(API_KEY, use_context=True)
 
+    dp = mybot.dispatcher
+    dp.add_handler(CommandHandler('start', start_bot))
+    dp.add_handler(MessageHandler(Filters.text, calc_rate))
+
+    logging.info('БОТ СТАРТОВАЛ!')
     mybot.start_polling()
     mybot.idle()
 
