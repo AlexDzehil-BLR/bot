@@ -2,8 +2,8 @@
 import logging
 import settings
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from current_parce import print_date, current_rate_nacbank, current_rate_belbank, current_rate_belapb, \
-                          current_rate_belbank_multiplay_usd, current_rate_belbank_multiplay_eur
+from current_parce import print_date, current_rate_nacbank, current_rate_belbank, current_rate_belbank_multiplay_usd, \
+                          current_rate_belbank_multiplay_eur
 
 logging.basicConfig(filename='bot.log', level=logging.INFO)
 
@@ -14,8 +14,10 @@ def start_bot(update, context):
 
 
 def calc_rate(update, context):
-    update.message.reply_text(current_rate_nacbank())
-    update.message.reply_text(current_rate_belbank())
+    date = str(print_date())
+    nacbank = current_rate_nacbank()
+    belbank = current_rate_belbank()
+    update.message.reply_text(f"{date}\n{nacbank}\n{belbank}")
 
 
 def rate(update, context):
@@ -38,7 +40,6 @@ def rate(update, context):
     else:
         message = 'Введите цифру и валюту. Например 100 usd или 100 eur.'
     update.message.reply_text(message)
-
 
 
 def main():
