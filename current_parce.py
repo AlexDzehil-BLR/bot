@@ -10,7 +10,7 @@ emoji_list = [':date:', ':arrow_up:', ':arrow_down:', ':arrow_right:', ':x:']
 def print_date():
     smile = emoji_list[0]
     smile = emojize(smile, use_aliases=True)
-    format_date = f"{smile}{datetime.date.today().day}.{datetime.date.today().month}.{datetime.date.today().year}"
+    format_date = f"{smile}{datetime.datetime.today().strftime('%d.%m.%Y')}"
     return format_date
 
 
@@ -21,7 +21,6 @@ def current_rate_nacbank():
     r = requests.get(url_nbrb)
     r_yest = requests.get(url_nbrb_yesterday)
     usd_yest, eur_yest = r_yest.json()[4]['Cur_OfficialRate'], r_yest.json()[5]['Cur_OfficialRate']
-    # usd_yest, eur_yest = 1, 3
     smile_up = emojize(emoji_list[1], use_aliases=True)
     smile_down = emojize(emoji_list[2], use_aliases=True)
     smile_equal = emojize(emoji_list[3], use_aliases=True)
@@ -59,7 +58,7 @@ def current_rate_nacbank():
 
 def current_rate_belbank():
     # Курс валют по Беларусбанк
-    url_belarusbank = 'https://belarusbank.by/api/kursExchange?city=Слоним'
+    url_belarusbank = 'https://belarusbank.by/api/kursExchange?city=Минск'
     r_belb = requests.get(url_belarusbank)
     usd, number_usd_in, number_usd_out = 'USD', r_belb.json()[0]['USD_in'], r_belb.json()[0]['USD_out']
     eur, number_eur_in, number_eur_out = 'EUR', r_belb.json()[0]['EUR_in'], r_belb.json()[0]['EUR_out']
@@ -95,4 +94,3 @@ def current_rate_belapb():
     root = tree.getroot()
     for child in range(7):
         print(child)
-
