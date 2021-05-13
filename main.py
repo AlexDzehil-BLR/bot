@@ -1,4 +1,5 @@
 import logging
+
 import settings
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -44,15 +45,15 @@ def rate(update, context):
 
 
 def main_keyboard():
-    return ReplyKeyboardMarkup([['Получить курс', 'Список команд'],
+    return ReplyKeyboardMarkup([['Получить курс', 'График за месяц'],
                                 ['Подписаться на уведомления', 'Отписаться от уведомлений']], resize_keyboard=True)
 
 
-def command_list(update, context):
-    message = 'Введите /rate цифру и валюту в которую хотите сконвертировать беларуские рубли' \
-              ' и вы получите сконвертированную валют по курсу Беларусбанка.' \
-              'Подходят обозначения usd, USD, доллар, долларов, баксов, eur, EUR, евро.'
-    update.message.reply_text(message)
+def get_plot(update, context):
+    chat_id = update.effective_chat.id
+    context.bot.send_photo(chat_id=chat_id, photo=open('image/eur_month.png', 'rb'))
+    context.bot.send_photo(chat_id=chat_id, photo=open('image/eur_month.png', 'rb'))
+
 
 
 def main():
@@ -62,7 +63,7 @@ def main():
     dp.add_handler(CommandHandler('start', start_bot))
     dp.add_handler(CommandHandler('rate', rate))
     dp.add_handler(MessageHandler(Filters.regex('^(Получить курс)$'), get_course))
-    dp.add_handler(MessageHandler(Filters.regex('^(Список команд)$'), command_list))
+    dp.add_handler(MessageHandler(Filters.regex('^(График за месяц)$'), get_plot))
     dp.add_handler(MessageHandler(Filters.text, start_bot))
 
     logging.info('БОТ СТАРТОВАЛ!')
