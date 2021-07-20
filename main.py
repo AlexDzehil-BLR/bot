@@ -51,7 +51,7 @@ def main_keyboard():
 
 def get_plot(update, context):
     chat_id = update.effective_chat.id
-    context.bot.send_photo(chat_id=chat_id, photo=open('image/eur_month.png', 'rb'))
+    context.bot.send_photo(chat_id=chat_id, photo=open('image/usd_month.png', 'rb'))
     context.bot.send_photo(chat_id=chat_id, photo=open('image/eur_month.png', 'rb'))
 
 

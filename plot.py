@@ -1,10 +1,8 @@
 import datetime
-import time
 
 import matplotlib.pyplot as plt
 import requests
 from dateutil import rrule
-from time import sleep
 
 
 def current_rate_plot_usd_month():
@@ -34,6 +32,7 @@ def current_rate_plot_usd_month():
     plt.style.use('seaborn')
     fig, ax = plt.subplots()
     fig.autofmt_xdate()
+    ax.xaxis.set_major_locator(plt.MaxNLocator(15))
     ax.plot(x_usd, y_usd, linewidth=3)
     ax.set_title('График курса USD', fontsize=24)
     ax.tick_params(axis='both', labelsize=14)
@@ -66,9 +65,8 @@ def current_rate_plot_usd_6month():
         x_usd.append(day)
     plt.style.use('seaborn')
     fig, ax = plt.subplots()
-    # Убирает отображение значений по оси x
-    # plt.xticks([])
     fig.autofmt_xdate()
+    ax.xaxis.set_major_locator(plt.MaxNLocator(20))
     ax.plot(x_usd, y_usd, linewidth=3)
     ax.set_title('График курса USD', fontsize=24)
     ax.tick_params(axis='both', labelsize=14)
@@ -103,6 +101,7 @@ def current_rate_plot_eur_month():
     plt.style.use('seaborn')
     fig, ax = plt.subplots()
     fig.autofmt_xdate()
+    ax.xaxis.set_major_locator(plt.MaxNLocator(15))
     ax.plot(x_eur, y_eur, linewidth=3)
     ax.set_title('График курса EUR', fontsize=24)
     ax.tick_params(axis='both', labelsize=14)
@@ -137,18 +136,16 @@ def current_rate_plot_eur_6month():
     plt.style.use('seaborn')
     fig, ax = plt.subplots()
     fig.autofmt_xdate()
+    ax.xaxis.set_major_locator(plt.MaxNLocator(10))
+
     ax.plot(x_eur, y_eur, linewidth=3)
     ax.set_title('График курса EUR', fontsize=24)
     ax.tick_params(axis='both', labelsize=14)
     plt.savefig('image/eur_6month.png')
 
 
-def start_plot():
-    current_rate_plot_eur_month()
-    current_rate_plot_usd_month()
-    current_rate_plot_eur_6month()
-    current_rate_plot_usd_6month()
-    sleep(86400)
 
-
-start_plot()
+current_rate_plot_eur_month()
+current_rate_plot_usd_month()
+current_rate_plot_eur_6month()
+current_rate_plot_usd_6month()
