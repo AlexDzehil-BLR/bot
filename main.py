@@ -33,7 +33,7 @@ def rate(update, context):
         else:
             if context.args[1] in current_list_usd:
                 value = current_rate_belbank_multiplay_usd(user_number)
-                message = f"{value} USD"
+                message = f"{value} BY"
             elif context.args[1] in current_list_eur:
                 value = current_rate_belbank_multiplay_eur(user_number)
                 message = f"{value} EUR"
